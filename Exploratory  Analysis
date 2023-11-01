@@ -13,7 +13,7 @@ ORDER BY 2
 
 
 
-------- Breakdown of day of the week as a percentage of each customers types total number of rides -------
+------- Breakdown of the day of the week, as a percentage of each customer types total number of rides -------
 WITH TotalCounts AS (
   SELECT member_casual, COUNT(ride_id) AS total_count
   FROM `cycling-project-403009.trips_lastyear.2022oct_to_2023sep`
@@ -28,6 +28,24 @@ FROM `cycling-project-403009.trips_lastyear.2022oct_to_2023sep` AS t1
 JOIN TotalCounts AS t2 ON t1.member_casual = t2.member_casual
 GROUP BY t1.day_of_week, t1.member_casual, t2.total_count
 ORDER BY  t1.member_casual, t1.day_of_week
+
+
+
+------- Breakdown of month as a percentage of each customer type's total number of rides -------
+WITH TotalCounts AS (
+  SELECT member_casual, COUNT(ride_id) AS total_count
+  FROM `cycling-project-403009.trips_lastyear.2022oct_to_2023sep`
+  GROUP BY member_casual
+)
+SELECT
+  t1.month,
+  t1.member_casual,
+  COUNT(t1.ride_id) AS number_of_rides,
+  ROUND(COUNT(t1.ride_id) * 100.0 / t2.total_count, 2) AS percentage_of_total
+FROM `cycling-project-403009.trips_lastyear.2022oct_to_2023sep` AS t1
+JOIN TotalCounts AS t2 ON t1.member_casual = t2.member_casual
+GROUP BY t1.month, t1.member_casual, t2.total_count
+ORDER BY  t1.member_casual, t1.month
 
 
 
